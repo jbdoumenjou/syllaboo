@@ -134,7 +134,6 @@
               <input 
                 type="checkbox" 
                 v-model="sound.enabled"
-                @change="() => toggleSound(sound.id)"
               />
               <span class="switch-slider"></span>
             </label>
@@ -302,6 +301,7 @@ function resetAllSettingsWithTheme() {
   // Show confirmation
   alert('✅ Configuration remise aux valeurs par défaut!')
 }
+
 
 const previewStyles = computed(() => ({
   fontSize: `${settings.value.fontSize}px`,
