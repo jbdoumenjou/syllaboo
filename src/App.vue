@@ -11,6 +11,14 @@
     <main>
       <router-view />
     </main>
+    
+    <footer class="app-footer">
+      <p>
+        ⚠️ Application expérimentale • 
+        <a href="https://github.com/jbdoumenjou/syllaboo" target="_blank" rel="noopener">Code source</a> • 
+        Consultation d'un spécialiste recommandée
+      </p>
+    </footer>
   </div>
 </template>
 
@@ -30,5 +38,28 @@
 main {
   flex: 1;
   padding: 2rem;
+}
+
+.app-footer {
+  background-color: var(--bg-secondary);
+  padding: 1rem 2rem;
+  text-align: center;
+  border-top: 1px solid var(--border-color);
+  margin-top: auto;
+}
+
+.app-footer p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.app-footer a {
+  color: var(--accent-primary);
+  text-decoration: none;
+}
+
+.app-footer a:hover {
+  text-decoration: underline;
 }
 </style>

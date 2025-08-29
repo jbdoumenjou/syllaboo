@@ -5,6 +5,11 @@
       Une application conçue spécialement pour aider les enfants dyslexiques à apprendre à lire.
     </p>
     
+    <div class="disclaimer">
+      ⚠️ Cette application est expérimentale. Les méthodes utilisées n'ont pas encore été validées par des spécialistes. 
+      Consultez un professionnel pour un accompagnement adapté.
+    </div>
+    
     <div class="features">
       <div class="feature">
         <h3>🎨 Couleurs des Sons</h3>
@@ -40,6 +45,19 @@
   text-align: center;
   margin: 2rem 0;
   color: var(--text-secondary);
+}
+
+.disclaimer {
+  background-color: #fff3cd;
+  border: 1px solid #ffeaa7;
+  border-radius: var(--border-radius);
+  padding: 1rem;
+  margin: 2rem auto;
+  max-width: 600px;
+  font-size: 0.95rem;
+  color: #856404;
+  text-align: center;
+  line-height: 1.5;
 }
 
 .features {

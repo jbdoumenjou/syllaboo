@@ -25,6 +25,11 @@ L'application s'inspire de la méthode des couleurs phonétiques française :
 - **"an" → Orange** (comme dans "orange")
 - etc.
 
+### 📚 Base scientifique
+
+Les méthodes utilisées s'appuient sur des recherches récentes en neurosciences et dyslexie. 
+Consultez notre [documentation de recherche](./dyslexia-research.md) pour les références académiques complètes.
+
 ## Installation
 
 ```bash
@@ -40,10 +45,20 @@ npm run dev
 - Web Speech API pour la synthèse vocale
 - Vite pour le développement
 
+## ⚠️ Avertissement important
+
+**Cette application est en cours de développement et à des fins de recherche éducative uniquement.**
+
+- Les algorithmes de coloration phonétique et de découpage syllabique sont **expérimentaux**
+- Le contenu n'a **pas encore été validé** par des orthophonistes ou spécialistes de la dyslexie
+- Cette application **ne remplace pas** un diagnostic ou suivi professionnel
+- L'efficacité des méthodes utilisées varie selon chaque enfant
+- **Consultation recommandée** : Demandez l'avis d'un professionnel de santé avant utilisation
+
 ## Licence
 
 MIT
 
 ---
 
-*Application à des fins éducatives. Ne remplace pas un suivi professionnel.*
+*Application à des fins éducatives et de recherche. Consultation d'un spécialiste recommandée.*
