@@ -4,6 +4,7 @@
       <ul>
         <li><router-link to="/">Accueil</router-link></li>
         <li><router-link to="/reading">Lecture</router-link></li>
+        <li><router-link to="/custom-text">Texte Personnalisé</router-link></li>
         <li><router-link to="/configuration">Configuration</router-link></li>
       </ul>
     </nav>
