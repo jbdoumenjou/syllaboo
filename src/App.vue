@@ -23,7 +23,15 @@
 </template>
 
 <script setup lang="ts">
-// No additional setup needed for basic routing
+import { onMounted } from 'vue'
+import { useTheme } from './composables/useTheme'
+
+const { applyCurrentTheme } = useTheme()
+
+// Apply saved theme on app startup
+onMounted(() => {
+  applyCurrentTheme()
+})
 </script>
 
 <style>

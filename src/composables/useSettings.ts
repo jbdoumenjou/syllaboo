@@ -90,6 +90,10 @@ export function useSettings() {
     settings.value.letterSpacing = Math.max(0, Math.min(5, spacing))
   }
   
+  function updateTheme(theme: string) {
+    settings.value.theme = theme
+  }
+  
   // Export a function to check if a sound should be highlighted
   function shouldHighlight(soundId: string): boolean {
     return settings.value.globalEnabled && 
@@ -117,6 +121,7 @@ export function useSettings() {
     updateLineHeight,
     updateWordSpacing,
     updateLetterSpacing,
+    updateTheme,
     shouldHighlight,
     getSoundColor
   }

@@ -198,7 +198,8 @@ export const phoneticDictionary: Record<string, PhoneticEntry> = {
     phonetic: "/bjɛ̃/",
     segments: [
       { letters: "b", sound: "consonant" },
-      { letters: "ien", sound: "in" }
+      { letters: "i", sound: "vowel-simple" }, // forms glide /j/ with following vowel
+      { letters: "en", sound: "in" } // "en" makes the /ɛ̃/ sound (nasal vowel like "in")
     ]
   },
   "main": {
@@ -222,8 +223,7 @@ export const phoneticDictionary: Record<string, PhoneticEntry> = {
     phonetic: "/pwɛ̃/",
     segments: [
       { letters: "p", sound: "consonant" },
-      { letters: "oi", sound: "oi" },
-      { letters: "n", sound: "consonant" },
+      { letters: "oin", sound: "in" }, // "oin" makes the /wɛ̃/ sound, not "oi" 
       { letters: "t", sound: "consonant" }
     ]
   },

@@ -17,6 +17,7 @@ export interface UserSettings {
   lineHeight: number
   wordSpacing: number
   letterSpacing: number
+  theme: string
 }
 
 export const defaultSoundConfigs: Record<string, SoundConfig> = {
@@ -119,5 +120,6 @@ export const defaultSettings: UserSettings = {
   fontSize: 24,
   lineHeight: 2.4,
   wordSpacing: 8,
-  letterSpacing: 1
+  letterSpacing: 1,
+  theme: 'cream'
 }

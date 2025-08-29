@@ -98,6 +98,19 @@
           <option value="Times New Roman">Times New Roman</option>
         </select>
       </div>
+      
+      <div class="setting-row">
+        <label class="setting-label">
+          Thème de couleurs (recherche scientifique)
+        </label>
+        <select v-model="selectedTheme" @change="updateTheme" class="theme-selector">
+          <option value="cream">🧈 Crème (par défaut)</option>
+          <option value="turquoise">🌊 Turquoise ⭐ (Durée de lecture optimale)</option>
+          <option value="yellow">🌞 Jaune ⭐ (Vitesse de lecture améliorée)</option>
+          <option value="blue-pastel">💙 Bleu pastel ⭐ (Recherche française)</option>
+          <option value="green-brown">🌲 Vert-Marron (Alternative)</option>
+        </select>
+      </div>
     </div>
     
     <!-- Sound Configuration -->
@@ -173,7 +186,7 @@
     <div class="settings-section">
       <h2>🔧 Actions</h2>
       <div class="action-buttons">
-        <button @click="resetAllSettings" class="reset-btn">
+        <button @click="resetAllSettingsWithTheme" class="reset-btn">
           🔄 Remettre par défaut
         </button>
         <button @click="exportSettings" class="export-btn">
@@ -203,6 +216,7 @@
         <h3>Paramètres actuels :</h3>
         <ul>
           <li>Police : {{ currentFont }}</li>
+          <li>Thème : {{ currentTheme }}</li>
           <li>Taille : {{ settings.fontSize }}px</li>
           <li>Espacement mots : {{ settings.wordSpacing }}px</li>
           <li>Espacement lettres : {{ settings.letterSpacing }}px</li>
@@ -215,8 +229,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { useSettings } from '@/composables/useSettings'
+import { useTheme } from '@/composables/useTheme'
 import PhoneticText from '@/components/PhoneticText.vue'
 
 const { 
@@ -228,10 +243,14 @@ const {
   enabledSounds 
 } = useSettings()
 
+const { setTheme, applyCurrentTheme } = useTheme()
+
 // Preview text for live demonstration
 const previewText = ref("Il était une fois un petit chat qui aimait jouer dans sa maison rouge. L'oiseau bleu chantait près du point d'eau, tandis que les enfants couraient dans le jardin.")
 
 const selectedFont = ref("OpenDyslexic")
+const selectedTheme = ref(settings.value.theme)
+
 const currentFont = computed(() => {
   const fontMap: Record<string, string> = {
     'OpenDyslexic': 'OpenDyslexic ⭐ (Dyslexie)',
@@ -245,12 +264,43 @@ const currentFont = computed(() => {
   return fontMap[selectedFont.value] || selectedFont.value
 })
 
+const currentTheme = computed(() => {
+  const themeMap: Record<string, string> = {
+    'cream': '🧈 Crème (par défaut)',
+    'turquoise': '🌊 Turquoise ⭐ (Durée de lecture optimale)',
+    'yellow': '🌞 Jaune ⭐ (Vitesse de lecture améliorée)', 
+    'blue-pastel': '💙 Bleu pastel ⭐ (Recherche française)',
+    'green-brown': '🌲 Vert-Marron (Alternative)'
+  }
+  return themeMap[selectedTheme.value] || selectedTheme.value
+})
+
 const enabledSoundsCount = computed(() => enabledSounds.value.length)
 const totalSoundsCount = computed(() => Object.keys(settings.value.sounds).length)
 
 function updateFont() {
   // This will be handled by CSS custom properties
   document.documentElement.style.setProperty('--reading-font-family', selectedFont.value)
+}
+
+function updateTheme() {
+  // Use the centralized theme system
+  setTheme(selectedTheme.value)
+}
+
+function resetAllSettingsWithTheme() {
+  // Reset settings to defaults
+  resetAllSettings()
+  
+  // Update UI state to match defaults
+  selectedTheme.value = 'cream'
+  selectedFont.value = 'OpenDyslexic'
+  
+  // Apply default theme immediately
+  applyCurrentTheme()
+  
+  // Show confirmation
+  alert('✅ Configuration remise aux valeurs par défaut!')
 }
 
 const previewStyles = computed(() => ({
@@ -271,22 +321,33 @@ function getTextColor(backgroundColor: string): string {
 }
 
 function exportSettings() {
-  const settingsJson = JSON.stringify(settings.value, null, 2)
-  const blob = new Blob([settingsJson], { type: 'application/json' })
-  const url = URL.createObjectURL(blob)
-  const a = document.createElement('a')
-  a.href = url
-  a.download = 'syllaboo-configuration.json'
-  document.body.appendChild(a)
-  a.click()
-  document.body.removeChild(a)
-  URL.revokeObjectURL(url)
+  try {
+    const settingsJson = JSON.stringify(settings.value, null, 2)
+    const blob = new Blob([settingsJson], { type: 'application/json' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = 'syllaboo-configuration.json'
+    a.style.display = 'none'
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    URL.revokeObjectURL(url)
+    
+    // Show success message
+    alert('✅ Configuration exportée avec succès!')
+  } catch (error) {
+    console.error('Export error:', error)
+    alert('❌ Erreur lors de l\'exportation')
+  }
 }
 
 function importSettings() {
   const input = document.createElement('input')
   input.type = 'file'
   input.accept = '.json'
+  input.style.display = 'none'
+  
   input.onchange = (event) => {
     const file = (event.target as HTMLInputElement).files?.[0]
     if (file) {
@@ -294,17 +355,42 @@ function importSettings() {
       reader.onload = (e) => {
         try {
           const importedSettings = JSON.parse(e.target?.result as string)
+          
+          // Validate imported settings structure
+          if (typeof importedSettings !== 'object' || !importedSettings.sounds) {
+            throw new Error('Format de fichier incorrect')
+          }
+          
+          // Update settings and apply theme immediately
           Object.assign(settings.value, importedSettings)
-          alert('Configuration importée avec succès!')
+          selectedTheme.value = settings.value.theme || 'cream'
+          applyCurrentTheme()
+          
+          alert('✅ Configuration importée avec succès!')
+          
         } catch (error) {
-          alert('Erreur lors de l\'importation: fichier non valide')
+          console.error('Import error:', error)
+          alert(`❌ Erreur lors de l'importation: ${error instanceof Error ? error.message : 'fichier non valide'}`)
         }
       }
+      
+      reader.onerror = () => {
+        alert('❌ Erreur lors de la lecture du fichier')
+      }
+      
       reader.readAsText(file)
     }
   }
+  
+  document.body.appendChild(input)
   input.click()
+  document.body.removeChild(input)
 }
+
+// Apply saved theme on component mount
+onMounted(() => {
+  applyCurrentTheme()
+})
 </script>
 
 <style scoped>
@@ -651,8 +737,8 @@ function importSettings() {
   }
 }
 
-.font-selector {
-  width: 200px;
+.font-selector, .theme-selector {
+  width: 250px;
   padding: 0.5rem;
   border: 2px solid #ddd;
   border-radius: var(--border-radius);
@@ -660,7 +746,7 @@ function importSettings() {
   background-color: white;
 }
 
-.font-selector:focus {
+.font-selector:focus, .theme-selector:focus {
   border-color: var(--accent-primary);
   outline: none;
 }
