@@ -76,10 +76,15 @@ Exemple : Il était une fois un petit chat qui aimait jouer dans sa maison rouge
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import PhoneticText from '@/components/PhoneticText.vue'
+import { useLocalStorage } from '@/composables/useLocalStorage'
 
-const customText = ref('')
+const { getItem, setItem } = useLocalStorage()
+const CUSTOM_TEXT_KEY = 'syllaboo_custom_text'
+
+// Initialize with saved text or empty string
+const customText = ref(getItem<string>(CUSTOM_TEXT_KEY) || '')
 
 const wordCount = computed(() => {
   return customText.value.trim() === '' ? 0 : customText.value.trim().split(/\s+/).length
@@ -100,6 +105,11 @@ Un matin, elle trouva un livre mystérieux aux pages jaunies. L'histoire parlait
 
 Soudain, elle entendit une voix douce qui l'appelait : "Marie, veux-tu nous rejoindre dans notre monde magique ?" C'était le début de la plus belle aventure de sa vie.`
 }
+
+// Save text to localStorage whenever it changes
+watch(customText, (newText) => {
+  setItem(CUSTOM_TEXT_KEY, newText)
+}, { deep: true })
 
 async function copyColoredText() {
   try {
