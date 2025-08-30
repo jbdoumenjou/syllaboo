@@ -18,7 +18,10 @@
       </button>
     </div>
     
-    <div class="reading-text" :class="{ 'no-highlighting': !isHighlightingEnabled }">
+    <div class="reading-text" :class="{ 
+      'no-highlighting': !isHighlightingEnabled,
+      'character-mode': !isZoneMode
+    }">
       <template v-for="(word, wordIndex) in processedWords" :key="wordIndex">
         <span v-if="word.isSpace" class="word-space">{{ word.text }}</span>
         <span v-else class="word-container">
@@ -204,25 +207,36 @@ function getSegmentClass(segment: ProcessedSegment): string {
   return `sound-${segment.soundType}`
 }
 
+// Computed property to ensure reactivity when colorMode changes
+const isZoneMode = computed(() => settings.value.colorMode === 'zone')
+
 function getSegmentStyle(segment: ProcessedSegment): Record<string, string> {
   if (!isHighlightingEnabled.value || segment.soundType === 'none') return {}
   
   const color = getSoundColor(segment.soundType)
   if (!color) return {}
   
-  // Simple function to determine if text should be white or black based on background
-  const getTextColor = (backgroundColor: string): string => {
-    const hex = backgroundColor.replace('#', '')
-    const r = parseInt(hex.substr(0, 2), 16)
-    const g = parseInt(hex.substr(2, 2), 16)
-    const b = parseInt(hex.substr(4, 2), 16)
-    const brightness = (r * 299 + g * 587 + b * 114) / 1000
-    return brightness > 128 ? '#000000' : '#FFFFFF'
-  }
-  
-  return {
-    backgroundColor: color,
-    color: getTextColor(color)
+  if (isZoneMode.value) {
+    // Zone mode: colored background with contrasting text
+    const getTextColor = (backgroundColor: string): string => {
+      const hex = backgroundColor.replace('#', '')
+      const r = parseInt(hex.substr(0, 2), 16)
+      const g = parseInt(hex.substr(2, 2), 16)
+      const b = parseInt(hex.substr(4, 2), 16)
+      const brightness = (r * 299 + g * 587 + b * 114) / 1000
+      return brightness > 128 ? '#000000' : '#FFFFFF'
+    }
+    
+    return {
+      backgroundColor: color,
+      color: getTextColor(color)
+    }
+  } else {
+    // Character mode: colored text only
+    return {
+      color: color,
+      fontWeight: 'bold'
+    }
   }
 }
 
@@ -336,6 +350,14 @@ onMounted(() => {
   font-weight: bold;
   transition: all 0.1s ease;
   line-height: 1.2;
+}
+
+/* Character mode: remove background styling */
+.reading-text.character-mode .sound-segment {
+  padding: 0 1px;
+  border-radius: 0;
+  margin: 0;
+  background-color: transparent !important;
 }
 
 .sound-segment:not([style*="background-color"]) {

@@ -93,6 +93,10 @@ export function useSettings() {
   function updateTheme(theme: string) {
     settings.value.theme = theme
   }
+
+  function updateColorMode(mode: 'zone' | 'character') {
+    settings.value.colorMode = mode
+  }
   
   // Export a function to check if a sound should be highlighted
   function shouldHighlight(soundId: string): boolean {
@@ -122,6 +126,7 @@ export function useSettings() {
     updateWordSpacing,
     updateLetterSpacing,
     updateTheme,
+    updateColorMode,
     shouldHighlight,
     getSoundColor
   }

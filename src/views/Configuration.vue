@@ -32,6 +32,16 @@
       
       <div class="setting-row">
         <label class="setting-label">
+          Mode de coloration:
+        </label>
+        <select v-model="settings.colorMode" class="font-selector">
+          <option value="zone">🎨 Zone colorée (arrière-plan)</option>
+          <option value="character">✏️ Caractères colorés</option>
+        </select>
+      </div>
+      
+      <div class="setting-row">
+        <label class="setting-label">
           Taille de police: {{ settings.fontSize }}px
         </label>
         <input 
@@ -216,6 +226,7 @@
         <ul>
           <li>Police : {{ currentFont }}</li>
           <li>Thème : {{ currentTheme }}</li>
+          <li>Mode couleur : {{ settings.colorMode === 'zone' ? 'Zone colorée' : 'Caractères colorés' }}</li>
           <li>Taille : {{ settings.fontSize }}px</li>
           <li>Espacement mots : {{ settings.wordSpacing }}px</li>
           <li>Espacement lettres : {{ settings.letterSpacing }}px</li>
@@ -750,4 +761,5 @@ onMounted(() => {
   border-color: var(--accent-primary);
   outline: none;
 }
+
 </style>

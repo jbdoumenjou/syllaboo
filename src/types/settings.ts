@@ -13,6 +13,7 @@ export interface UserSettings {
   sounds: Record<string, SoundConfig>
   globalEnabled: boolean
   showLegend: boolean
+  colorMode: 'zone' | 'character'
   fontSize: number
   lineHeight: number
   wordSpacing: number
@@ -117,6 +118,7 @@ export const defaultSettings: UserSettings = {
   sounds: defaultSoundConfigs,
   globalEnabled: true,
   showLegend: true,
+  colorMode: 'zone',
   fontSize: 24,
   lineHeight: 2.4,
   wordSpacing: 8,
