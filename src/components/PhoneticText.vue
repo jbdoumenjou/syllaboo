@@ -330,17 +330,19 @@ onMounted(() => {
 
 /* Dynamic sound styles based on user settings */
 .sound-segment {
-  padding: 3px 5px;
-  border-radius: 4px;
-  margin: 0 2px;
+  padding: 0 3px;
+  border-radius: 2px;
+  margin: -2px 1px;
   font-weight: bold;
   transition: all 0.1s ease;
+  line-height: 1.2;
 }
 
 .sound-segment:not([style*="background-color"]) {
   /* Unstyled segments (no background color) */
-  padding: 3px 2px;
-  margin: 0 1px;
+  padding: 0 2px;
+  margin: -2px 1px;
+  line-height: 1.2;
 }
 
 .phonetic-legend {
